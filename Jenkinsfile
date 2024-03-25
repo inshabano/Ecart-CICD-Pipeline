@@ -3,7 +3,7 @@ pipeline {
 
    tools {
       maven 'maven3'
-      jdk 'jdk17'
+      jdk 'jdk11'
    }
 
    environment {
@@ -37,6 +37,24 @@ pipeline {
           }
        }
 
+       stage('OWASP dependency check') {
+          steps {
+              dependencyCheck additionalArguments: ' --scan ./', odcInstallation: 'dependency-check'
+              dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+          }
+       }
 
+       stage('Build') {
+          steps {
+             sh "mvn package -DskipTests=true"
+          }
+       }
+       stage('Deploy to nexus') {
+          steps {
+           withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk11', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+               sh "mvn deploy -DskipTests=true"
+           }
+          }
+       }
    }
 }
