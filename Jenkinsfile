@@ -3,7 +3,7 @@ pipeline {
 
    tools {
       maven 'maven3'
-      jdk 'jdk11'
+      jdk 'jdk17'
    }
 
    environment {
@@ -28,7 +28,7 @@ pipeline {
 
        stage('SonarQube Analysis') {
           steps {
-             withSonarQubeEnv('sonarqube') {
+             withSonarQubeEnv('sonar') {
                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=EKART -Dsonar.projectName=EKART \
                 -Dsonar.java.binaries=. '''
 
@@ -51,10 +51,25 @@ pipeline {
        }
        stage('Deploy to nexus') {
           steps {
-           withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk11', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+           withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
                sh "mvn deploy -DskipTests=true"
            }
           }
        }
+
+         stage('Trivy scan') {
+                   steps {
+                      sh "trivy image inshabano/ecart:latest >trivy-report.txt"
+                   }
+                }
+
+         stage('Docker push') {
+                 steps {
+                     script{ withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){
+                       sh "docker push -t inshabano/ecart:latest"
+                    }
+                 }
+                 }
+        }
    }
 }
