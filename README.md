@@ -133,6 +133,6 @@ Deploys the Docker image to a Kubernetes cluster using the provided deployment a
 
    2. Dockerfile: Contains instructions to build the Docker image
 
-   3. k8s-deployment.yml: Kubernetes deployment configuration
+   3. deploymentservice.yml: Kubernetes deployment and service configuration
 
-   4. k8s-service.yml: Kubernetes service configuration
+   4. serviceAcc.yml: Jenkins account configuration
