@@ -135,4 +135,4 @@ Deploys the Docker image to a Kubernetes cluster using the provided deployment a
 
    3. deploymentservice.yml: Kubernetes deployment and service configuration
 
-   4. serviceAcc.yml: Jenkins account configuration
+   4. serviceAcc.yml: Account, Role and Role binding configuration
