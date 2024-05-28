@@ -10,33 +10,36 @@ This project demonstrates a complete CI/CD pipeline for an eCart website using J
 
 ● CI/CD Pipeline
 
-   1. SonarQube Analysis
+     1. SonarQube Analysis
       
-   2. OWASP Dependency Check
+     2. OWASP Dependency Check
       
-   3. Build Artifacts with Maven
+     3. Build Artifacts with Maven
     
-   4. Store Artifacts in Nexus
+     4. Store Artifacts in Nexus
     
-   5. Build Docker Image
+     5. Build Docker Image
        
-   6. Deploy to Kubernetes
+     6. Deploy to Kubernetes
    
 ● Setup Instructions
 
-   1 Prerequisites
+     1 Prerequisites
    
-   2 Jenkins Configuration
+     2 Jenkins Configuration
    
-   3 Kubernetes Configuration
+     3 Kubernetes Configuration
 
 ● Files in the Repository
 
-**Project Overview **
+
+
+
+※ Project Overview 
 
 The eCart DevOps project demonstrates a complete CI/CD pipeline for an eCart web application. It uses Jenkins to automate the processes of code analysis, security checks, building, storing, containerizing, and deploying the application.
 
-**Technologies Used**
+※ **Technologies Used**
 
 ● Jenkins: CI/CD automation server
 
@@ -52,7 +55,7 @@ The eCart DevOps project demonstrates a complete CI/CD pipeline for an eCart web
 
 ● Kubernetes: Container orchestration platform
 
-**CI/CD Pipeline**
+※ **CI/CD Pipeline**
 
 1. SonarQube Analysis: 
 Performs static code analysis to detect bugs, code smells, and security vulnerabilities.
@@ -72,7 +75,7 @@ Creates a Docker image of the application using the built artifact and the provi
 7. Deploy to Kubernetes: 
 Deploys the Docker image to a Kubernetes cluster using the provided deployment and service files.
 
-**Setup Instructions** 
+※ **Setup Instructions** 
 
 **Prerequisites:** 
 
@@ -124,7 +127,7 @@ Ensure Kubernetes Cluster is Up and Running.
 
 Configure kubeconfig in Jenkins for cluster access.
 
-**Files in the Repository**
+※ **Files in the Repository**
 
 Jenkinsfile: Defines the CI/CD pipeline stages
 
