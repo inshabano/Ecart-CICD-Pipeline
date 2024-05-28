@@ -63,7 +63,7 @@ pipeline {
                    }
                 }
 
-         stage('Docker push') {
+         stage('Docker push image') {
                  steps {
                      script{ withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){
                        sh "docker push -t inshabano/ecart:latest"
@@ -71,5 +71,14 @@ pipeline {
                  }
                  }
         }
+
+        stage('Kubernetes deploy') {
+                  steps {
+                     withKubeConfig(caCertificate:'',clusterName:'',contextName:'',credentialsId:'k8-oken',namespace:'webspace',){
+                     sh "kubectl apply -f deploymentservice.yaml -n webapps"
+                     sh "kubectl get svc -n webapps"
+                     }
+                  }
+               }
    }
 }
