@@ -26,8 +26,8 @@ pipeline {
       }
 
 
-       stage('SonarQube Analysis') {
-          steps {
+      stage('SonarQube Analysis') {
+         steps {
              withSonarQubeEnv('sonar') {
                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=EKART -Dsonar.projectName=EKART \
                 -Dsonar.java.binaries=. '''
@@ -35,9 +35,9 @@ pipeline {
 
              }
           }
-       }
+      }
 
-       stage('OWASP dependency check') {
+      stage('OWASP dependency check') {
           steps {
               dependencyCheck additionalArguments: ' --scan ./', odcInstallation: 'dependency-check'
               dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
@@ -57,28 +57,40 @@ pipeline {
           }
        }
 
-         stage('Trivy scan') {
-                   steps {
-                      sh "trivy image inshabano/ecart:latest >trivy-report.txt"
-                   }
+       stage("BUILD IMAGE"){
+          steps{
+             script{
+                withDockerRegistry(credentianlsId: 'docker-cred", toolName: 'docker') {
+                        sh "docker build -t inshabano/ecart:latest -f /Dockerfile ."
                 }
+               
+             }
+          }
+       }
 
-         stage('Docker push image') {
-                 steps {
-                     script{ withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){
+       stage('Trivy scan') {
+           steps {
+                 sh "trivy image inshabano/ecart:latest >trivy-report.txt"
+           }
+       }
+
+       stage('Docker push image') {
+           steps {
+               script{
+                  withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){
                        sh "docker push -t inshabano/ecart:latest"
-                    }
-                 }
-                 }
+                  }
+               }
+           }
         }
 
         stage('Kubernetes deploy') {
-                  steps {
-                     withKubeConfig(caCertificate:'',clusterName:'',contextName:'',credentialsId:'k8-oken',namespace:'webspace',){
+            steps {
+               withKubeConfig(caCertificate:'',clusterName:'',contextName:'',credentialsId:'k8-oken',namespace:'webspace',){
                      sh "kubectl apply -f deploymentservice.yaml -n webapps"
                      sh "kubectl get svc -n webapps"
-                     }
-                  }
-               }
+                }
+            }
+         }
    }
 }
